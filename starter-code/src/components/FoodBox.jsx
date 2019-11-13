@@ -1,35 +1,49 @@
 import React from "react";
 
-const FoodBox = ({ food }) => {
+function FoodBox({
+  name,
+  calories,
+  image,
+  quantity,
+  increaseQuantity,
+  addFood
+}) {
   return (
     <div className="box">
       <article className="media">
         <div className="media-left">
           <figure className="image is-64x64">
-            <img src="https://i.imgur.com/eTmWoAN.png" />
+            <img src={image} alt={name} />
           </figure>
         </div>
         <div className="media-content">
           <div className="content">
             <p>
-              <strong>Pizza</strong> <br />
-              <small>400 cal</small>
+              <strong>{name}</strong> <br />
+              <small>{calories} cal</small>
             </p>
           </div>
         </div>
         <div className="media-right">
           <div className="field has-addons">
             <div className="control">
-              <input className="input" type="number" value="1" />
+              <input
+                className="input"
+                type="number"
+                value={quantity}
+                onChange={increaseQuantity(name)}
+              />
             </div>
             <div className="control">
-              <button className="button is-info">+</button>
+              <button className="button is-info" onClick={addFood(name)}>
+                +
+              </button>
             </div>
           </div>
         </div>
       </article>
     </div>
   );
-};
+}
 
 export default FoodBox;
