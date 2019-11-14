@@ -31,11 +31,11 @@ function FoodBox({
                 className="input"
                 type="number"
                 value={quantity}
-                onChange={increaseQuantity(name)}
+                onChange={increaseQuantity}
               />
             </div>
             <div className="control">
-              <button className="button is-info" onClick={addFood(name)}>
+              <button className="button is-info" onClick={() => addFood(name)}>
                 +
               </button>
             </div>

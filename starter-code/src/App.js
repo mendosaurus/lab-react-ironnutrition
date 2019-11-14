@@ -29,38 +29,55 @@ class App extends Component {
     this.setState({ filteredFoods });
   };
 
-  increaseQuantity = (name = String()) => e => {
-    const { filteredFoods } = this.state;
-    const newFoodList = filteredFoods.map(food =>
-      name.toLowerCase() === food.name.toLowerCase()
-        ? { ...food, quantity: e.target.value }
-        : food
-    );
-    this.setState({ filteredFoods: newFoodList });
+  increaseQuantity = e => {
+    // const { filteredFoods } = this.state;
+    // const newFoodList = filteredFoods.map(food =>
+    //   food.name.toLowerCase() === food.name.toLowerCase()
+    //     ? { ...food, quantity: e.target.value }
+    //     : food
+    // );
+    // this.setState({ filteredFoods: newFoodList });
   };
 
-  addFood = (name = String()) => _ => {
-    const { filteredFoods, selection } = this.state;
+  addFood = name => {
+    console.log(this.state);
+
+    let selection = [...this.state.selection];
+    let filteredFoods = [...this.state.filteredFoods];
+    console.log(name, filteredFoods, selection);
+
     const selectedFood = filteredFoods.find(
       food => food.name.toLowerCase() === name.toLowerCase()
     );
-    const validation = selection.find(
-      food => selectedFood.name.toLowerCase() === food.name.toLowerCase()
-    );
-    const newSelection = validation
-      ? selection.map(food =>
-          food.name.toLowerCase() === selectedFood.name.toLowerCase()
-            ? selectedFood
-            : food
-        )
-      : [selectedFood, ...selection];
-    this.setState({ selection: newSelection });
+    console.log("090909090", selectedFood);
+    selection.unshift(selectedFood);
+    console.log(selection);
+
+    this.setState({
+      selection: selection
+    });
+
+    console.log(this.state);
+
+    // const validation = selection.find(
+    //   food => selectedFood.name.toLowerCase() === food.name.toLowerCase()
+    // );
+    // console.log(validation);
+    // const newSelection = validation
+    //   ? selection.map(food =>
+    //       food.name.toLowerCase() === selectedFood.name.toLowerCase()
+    //         ? selectedFood
+    //         : food
+    //     )
+    //   : [selectedFood, ...selection];
+    // this.setState({ selection: newSelection });
   };
 
-  removeFood = name => _ => {
+  removeFood = name => {
+    console.log("in remove");
     const { selection } = this.state;
     const newSelection = selection.filter(
-      food => name.toLowerCase() === food.name.toLowerCase()
+      food => name.toLowerCase() !== food.name.toLowerCase()
     );
     this.setState({ selection: newSelection });
   };

@@ -14,9 +14,11 @@ function TodayMenu({ selection = [], removeFood }) {
             <span>
               {quantity} {name} = {quantity * Number(calories)} calories
             </span>
-            <button onClick={removeFood(name)} className="button">
+            <button onClick={e => removeFood(name)} className="button">
               delete
             </button>
+            {/* <button onClick={removeFood(name)} className="button">  bad way because it calls immediately on load*/}
+            {/* <button onClick={removeFood} className="button"> good way also*/}
           </li>
         ))}
       </ul>
