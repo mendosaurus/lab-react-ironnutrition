@@ -69,19 +69,25 @@ class App extends Component {
     const { filteredFoods, formActive, selection } = this.state;
     return (
       <div className="App">
-        <h1 className="title">IronNutrition</h1>
-        <Search handleSearch={this.handleSearch} />
-        <button onClick={this.toggleFoodForm} className="button is-info">
-          Add More
-        </button>
-        {formActive && <FoodForm createFood={this.createFood} />}
-        <FoodList
-          foods={filteredFoods}
-          increaseQuantity={this.increaseQuantity}
-          selection={selection}
-          addFood={this.addFood}
-          removeFood={this.removeFood}
-        />
+        <div className="navbar">
+          <h1 className="title">IronNutrition</h1>
+        </div>
+        <div className="section">
+          <Search handleSearch={this.handleSearch} />
+          <button onClick={this.toggleFoodForm} className="button is-info">
+            Add More
+          </button>
+          {formActive && <FoodForm createFood={this.createFood} />}
+        </div>
+        <div className="section">
+          <FoodList
+            foods={filteredFoods}
+            increaseQuantity={this.increaseQuantity}
+            selection={selection}
+            addFood={this.addFood}
+            removeFood={this.removeFood}
+          />
+        </div>
       </div>
     );
   }
