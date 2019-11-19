@@ -1,49 +1,57 @@
-import React from "react";
+import React, { Component } from "react";
 
-function FoodBox({
-  name,
-  calories,
-  image,
-  quantity,
-  increaseQuantity,
-  addFood
-}) {
-  return (
-    <div className="box">
-      <article className="media">
-        <div className="media-left">
-          <figure className="image is-64x64">
-            <img src={image} alt={name} />
-          </figure>
-        </div>
-        <div className="media-content">
-          <div className="content">
-            <p>
-              <strong>{name}</strong> <br />
-              <small>{calories} cal</small>
-            </p>
+export default class FoodBox extends Component {
+  state = {
+    quantity: 0,
+    food: this.props.food
+  };
+
+  handleInputChange = e => {
+    this.setState({
+      quantity: e.target.value
+    });
+  };
+
+  render() {
+    return (
+      <div className="box">
+        <article className="media">
+          <div className="media-left">
+            <figure className="image is-64x64">
+              <img src={this.props.food.image} alt='' />
+            </figure>
           </div>
-        </div>
-        <div className="media-right">
-          <div className="field has-addons">
-            <div className="control">
-              <input
-                className="input"
-                type="number"
-                value={quantity}
-                onChange={increaseQuantity}
-              />
-            </div>
-            <div className="control">
-              <button className="button is-info" onClick={() => addFood(name)}>
-                +
-              </button>
+          <div className="media-content">
+            <div className="content">
+              <p>
+                <strong>{this.props.food.name}</strong> <br />
+                <small>{this.props.food.calories}</small>
+              </p>
             </div>
           </div>
-        </div>
-      </article>
-    </div>
-  );
+          <div className="media-right">
+            <div className="field has-addons">
+              <div className="control">
+                <input
+                  name="quantity"
+                  className="input"
+                  type="number"
+                  defaultValue="1"
+                  onChange={this.handleInputChange}
+                />
+              </div>
+              <div className="control">
+                <button
+                  className="button is-info"
+                  onClick={e => this.props.addFood(this.state, this.props.food)}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    );
+  }
 }
-
-export default FoodBox;

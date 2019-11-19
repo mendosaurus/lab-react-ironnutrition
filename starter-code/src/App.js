@@ -1,113 +1,187 @@
 import React, { Component } from "react";
-import foods from "./foods.json";
+import logo from "./logo.svg";
+import foods from "../src/foods.json";
+import FoodBox from "./components/FoodBox";
+import Search from "./components/Search";
 import "bulma/css/bulma.css";
-import { FoodList, FoodForm, Search } from "./components";
+import "./App.css";
 
 class App extends Component {
   state = {
-    foods,
-    filteredFoods: foods,
-    formActive: false,
-    selection: []
+    myFoods: [...foods],
+    open: false,
+    todaysFoods: [],
+    calTotal: 0
   };
 
-  createFood = formData => {
-    const { foods } = this.state;
-    const newFoodList = [...foods, formData];
-    this.setState({ foods: newFoodList, filteredFoods: newFoodList });
-  };
+  deleteThis = i => {
+    let newFoods = [...this.state.todaysFoods];
 
-  toggleFoodForm = () => this.setState({ formActive: !this.state.formActive });
+    let removed = newFoods.splice(i, 1);
 
-  handleSearch = e => {
-    const { foods } = this.state;
-    const searchInput = e.target.value;
-    if (!searchInput) return this.setState({ filteredFoods: foods });
-    const filteredFoods = foods.filter(food =>
-      food.name.toLowerCase().includes(searchInput.toLowerCase())
-    );
-    this.setState({ filteredFoods });
-  };
-
-  increaseQuantity = e => {
-    // const { filteredFoods } = this.state;
-    // const newFoodList = filteredFoods.map(food =>
-    //   food.name.toLowerCase() === food.name.toLowerCase()
-    //     ? { ...food, quantity: e.target.value }
-    //     : food
-    // );
-    // this.setState({ filteredFoods: newFoodList });
-  };
-
-  addFood = name => {
-    console.log(this.state);
-
-    let selection = [...this.state.selection];
-    let filteredFoods = [...this.state.filteredFoods];
-    console.log(name, filteredFoods, selection);
-
-    const selectedFood = filteredFoods.find(
-      food => food.name.toLowerCase() === name.toLowerCase()
-    );
-    console.log("090909090", selectedFood);
-    selection.unshift(selectedFood);
-    console.log(selection);
+    let newCals =
+      this.state.calTotal - removed[0].calories * removed[0].quantity;
 
     this.setState({
-      selection: selection
+      todaysFoods: newFoods,
+      calTotal: newCals
+    });
+  };
+
+  addFood = e => {
+    console.log(e);
+    let updateToday = [...this.state.todaysFoods];
+
+    updateToday.push({
+      quantity: e.quantity,
+      name: e.food.name,
+      calories: e.food.calories
     });
 
-    console.log(this.state);
+    let newCalories =
+      this.state.calTotal + Number(e.quantity) * Number(e.food.calories);
 
-    // const validation = selection.find(
-    //   food => selectedFood.name.toLowerCase() === food.name.toLowerCase()
-    // );
-    // console.log(validation);
-    // const newSelection = validation
-    //   ? selection.map(food =>
-    //       food.name.toLowerCase() === selectedFood.name.toLowerCase()
-    //         ? selectedFood
-    //         : food
-    //     )
-    //   : [selectedFood, ...selection];
-    // this.setState({ selection: newSelection });
+    this.setState({
+      todaysFoods: updateToday,
+      calTotal: newCalories
+    });
   };
 
-  removeFood = name => {
-    console.log("in remove");
-    const { selection } = this.state;
-    const newSelection = selection.filter(
-      food => name.toLowerCase() !== food.name.toLowerCase()
-    );
-    this.setState({ selection: newSelection });
+  searchInput = e => {
+    console.log(e.target.value);
+    let search = e.target.value;
+    let filteredFoods = foods.filter(food => {
+      if (food.name.toLowerCase().includes(search.toLowerCase())) {
+        return food;
+      }
+    });
+
+    this.setState({
+      myFoods: filteredFoods
+    });
   };
 
+  closeForm = () => {
+    let updatedFoods = [...this.state.myFoods];
+    let newFood = {
+      name: this.state.name,
+      calories: this.state.calories,
+      image: this.state.image,
+      quantity: 0
+    };
+
+    updatedFoods.push(newFood);
+
+    this.setState({
+      myFoods: updatedFoods,
+      open: !this.state.open
+    });
+  };
+
+  createForm = e => {
+    if (this.state.open) {
+      this.setState({
+        [e.target.name]: e.target.value
+      });
+    } else {
+      this.setState({
+        open: !this.state.open
+      });
+    }
+  };
+  showForm = () => {
+    if (this.state.open) {
+      return (
+        <div>
+          <form>
+            <div className="field" onSubmit={this.closeForm}>
+              <div className="control">
+                <input
+                  className="input is-primary"
+                  type="text"
+                  name="name"
+                  placeholder="Food Name"
+                  onChange={this.createForm}
+                />
+              </div>
+            </div>
+            <div className="field">
+              <div className="control">
+                <input
+                  className="input is-primary"
+                  type="text"
+                  name="calories"
+                  placeholder="Food Calories"
+                  onChange={this.createForm}
+                />
+              </div>
+            </div>
+            <div className="field">
+              <div className="control">
+                <input
+                  className="input is-primary"
+                  type="text"
+                  name="image"
+                  placeholder="Food Image"
+                  onChange={this.createForm}
+                />
+              </div>
+            </div>
+          </form>
+          <button onClick={this.closeForm}>Submit New Food</button>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <button onClick={this.createForm}>Add New Food</button>
+        </div>
+      );
+    }
+  };
   render() {
-    const { filteredFoods, formActive, selection } = this.state;
     return (
       <div className="App">
-        <div className="navbar">
-          <h1 className="title">IronNutrition</h1>
-        </div>
-        <div className="section">
-          <Search handleSearch={this.handleSearch} />
-          <button onClick={this.toggleFoodForm} className="button is-info">
-            Add More
-          </button>
-          {formActive && <FoodForm createFood={this.createFood} />}
-        </div>
-        <div className="section">
-          <FoodList
-            foods={filteredFoods}
-            increaseQuantity={this.increaseQuantity}
-            selection={selection}
-            addFood={this.addFood}
-            removeFood={this.removeFood}
-          />
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h1 className="App-title">IronNutrition</h1>
+        </header>
+        <Search
+          searchInput={e => this.searchInput(e)}
+          searchIt={() => this.searchIt(this.state.search)}
+        />
+        {this.showForm()}
+
+        <div>
+          <div className="flexy">
+            <div className="foodOptions">
+              {this.state.myFoods.map((food, index) => {
+                return (
+                  <FoodBox food={food} key={index} addFood={this.addFood} />
+                );
+              })}
+            </div>
+            <div className="todaysFoods">
+              <ul>
+                <li>Today's foods</li>
+                {this.state.todaysFoods.map((food, i) => {
+                  return (
+                    <li>
+                      {food.quantity} {food.name} ={" "}
+                      {food.calories * food.quantity}
+                      <button onClick={() => this.deleteThis(i)}>Delete</button>
+                    </li>
+                  );
+                })}
+                <li id="calTotal">
+                  total: <span>{this.state.calTotal}</span> cals
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 }
-
 export default App;

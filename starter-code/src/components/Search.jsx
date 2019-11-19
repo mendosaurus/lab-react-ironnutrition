@@ -1,13 +1,26 @@
-import React from "react";
+import React, { Component } from "react";
 
-function Search({ handleSearch }) {
-  return (
-    <input
-      type="text"
-      placeholder="Search for your favorite food"
-      className="input search-bar"
-      onChange={handleSearch}
-    />
-  );
+export default class Search extends Component {
+  render() {
+    return (
+      <form>
+        <div>
+          <div className="field has-addons">
+            <div className="control">
+              <input
+                className="input"
+                name="search"
+                type="text"
+                placeholder="Search food"
+                onChange={this.props.searchInput}
+              />
+            </div>
+            <div className="control">
+              <a className="button is-info">Search</a>
+            </div>
+          </div>
+        </div>
+      </form>
+    );
+  }
 }
-export default Search;
