@@ -22,6 +22,15 @@
   font-size: large;
 }
 
+.flex-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.box {
+  overflow: hidden;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

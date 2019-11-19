@@ -5,6 +5,7 @@ import FoodBox from "./components/FoodBox";
 import Search from "./components/Search";
 import "bulma/css/bulma.css";
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 class App extends Component {
   state = {
@@ -12,20 +13,6 @@ class App extends Component {
     open: false,
     todaysFoods: [],
     calTotal: 0
-  };
-
-  deleteThis = i => {
-    let newFoods = [...this.state.todaysFoods];
-
-    let removed = newFoods.splice(i, 1);
-
-    let newCals =
-      this.state.calTotal - removed[0].calories * removed[0].quantity;
-
-    this.setState({
-      todaysFoods: newFoods,
-      calTotal: newCals
-    });
   };
 
   addFood = e => {
@@ -44,6 +31,21 @@ class App extends Component {
     this.setState({
       todaysFoods: updateToday,
       calTotal: newCalories
+    });
+  };
+
+  deleteThis = i => {
+    console.log(this.state.todaysFoods);
+    let newFoods = [...this.state.todaysFoods];
+
+    let removed = newFoods.splice(i, 1);
+
+    let newCals =
+      this.state.calTotal - removed[0].calories * removed[0].quantity;
+
+    this.setState({
+      todaysFoods: newFoods,
+      calTotal: newCals
     });
   };
 
@@ -89,15 +91,16 @@ class App extends Component {
       });
     }
   };
+
   showForm = () => {
     if (this.state.open) {
       return (
         <div>
           <form>
-            <div className="field" onSubmit={this.closeForm}>
+            <div className="form-group" onSubmit={this.closeForm}>
               <div className="control">
                 <input
-                  className="input is-primary"
+                  className="form-control"
                   type="text"
                   name="name"
                   placeholder="Food Name"
@@ -105,10 +108,10 @@ class App extends Component {
                 />
               </div>
             </div>
-            <div className="field">
+            <div className="form-group">
               <div className="control">
                 <input
-                  className="input is-primary"
+                  className="form-control"
                   type="text"
                   name="calories"
                   placeholder="Food Calories"
@@ -116,10 +119,10 @@ class App extends Component {
                 />
               </div>
             </div>
-            <div className="field">
+            <div className="form-group">
               <div className="control">
                 <input
-                  className="input is-primary"
+                  className="form-control"
                   type="text"
                   name="image"
                   placeholder="Food Image"
@@ -139,45 +142,43 @@ class App extends Component {
       );
     }
   };
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">IronNutrition</h1>
+          <h1 className="title">IronNutrition</h1>
         </header>
         <Search
           searchInput={e => this.searchInput(e)}
-          searchIt={() => this.searchIt(this.state.search)}
+          // searchIt={() => this.searchIt(this.state.search)}
+          className="input"
         />
         {this.showForm()}
 
-        <div>
-          <div className="flexy">
-            <div className="foodOptions">
-              {this.state.myFoods.map((food, index) => {
+        <div className="flex-container">
+          <div className="foodOptions">
+            {this.state.myFoods.map((food, index) => {
+              return <FoodBox food={food} key={index} addFood={this.addFood} />;
+            })}
+          </div>
+          <div className="todaysFoods">
+            <ul>
+              <li>Today's foods</li>
+              {this.state.todaysFoods.map((food, i) => {
                 return (
-                  <FoodBox food={food} key={index} addFood={this.addFood} />
+                  <li key={i}>
+                    {food.quantity} {food.name} ={" "}
+                    {food.calories * food.quantity}
+                    <button onClick={() => this.deleteThis(i)}>Delete</button>
+                  </li>
                 );
               })}
-            </div>
-            <div className="todaysFoods">
-              <ul>
-                <li>Today's foods</li>
-                {this.state.todaysFoods.map((food, i) => {
-                  return (
-                    <li>
-                      {food.quantity} {food.name} ={" "}
-                      {food.calories * food.quantity}
-                      <button onClick={() => this.deleteThis(i)}>Delete</button>
-                    </li>
-                  );
-                })}
-                <li id="calTotal">
-                  total: <span>{this.state.calTotal}</span> cals
-                </li>
-              </ul>
-            </div>
+              <li id="calTotal">
+                total: <span>{this.state.calTotal}</span> cals
+              </li>
+            </ul>
           </div>
         </div>
       </div>

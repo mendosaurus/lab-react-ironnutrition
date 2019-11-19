@@ -3,14 +3,14 @@ import React, { Component } from "react";
 export default class Search extends Component {
   render() {
     return (
-      <form>
-        <div>
+      <form className="container">
+        <div className="form-groups">
           <div className="field has-addons">
             <div className="control">
               <input
-                className="input"
+                className="form-control"
                 name="search"
-                type="text"
+                type="search"
                 placeholder="Search food"
                 onChange={this.props.searchInput}
               />
